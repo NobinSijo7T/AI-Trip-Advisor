@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Travel Planner</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"    />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="api-styles.css" />
+  </head>
+  <body>
+    <div class="container">      <header class="header">
+        <i class="fas fa-plane-departure"></i>
+        <h1>AI Travel Planner</h1>
+        <p class="subtitle">Plan your perfect trip with AI assistance</p>
+        <div class="travel-agent-badge">
+          <i class="fas fa-award"></i>
+          Professional Travel Agent Powered
+        </div>
+      </header>
+
+      <div class="form-container">
+        <form id="travelForm">          <div class="form-row">
+            <div class="form-group">
+              <label for="country">
+                <i class="fas fa-globe"></i>
+                Country
+              </label>
+              <select id="country" required onchange="loadCities()">
+                <option value="">Select a country</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="destination">
+                <i class="fas fa-map-marker-alt"></i>
+                City/Destination
+              </label>
+              <select id="destination" required disabled>
+                <option value="">First select a country</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="startDate">
+                <i class="fas fa-calendar-alt"></i>
+                Start Date
+              </label>
+              <input type="date" id="startDate" required />
+            </div>
+            <div class="form-group">
+              <label for="endDate">
+                <i class="fas fa-calendar-check"></i>
+                End Date
+              </label>
+              <input type="date" id="endDate" required />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="budget">
+                <i class="fas fa-dollar-sign"></i>
+                Budget Type
+              </label>
+              <select id="budget" required>
+                <option value="">Select budget type</option>
+                <option value="budget">Budget - Economy options</option>
+                <option value="moderate">Moderate - Mid-range comfort</option>
+                <option value="luxury">Luxury - Premium experience</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="tripNature">
+                <i class="fas fa-users"></i>
+                Trip Nature
+              </label>
+              <select id="tripNature" required>
+                <option value="">Select trip type</option>
+                <option value="single">Solo Travel</option>
+                <option value="couple">Couple</option>
+                <option value="family">Family</option>
+                <option value="friends">Friends</option>
+              </select>
+            </div>
+          </div>          <div class="form-group">
+            <label for="estimatedCost">
+              <i class="fas fa-calculator"></i>
+              Estimated Budget ($)
+            </label>
+            <input
+              type="number"
+              id="estimatedCost"
+              placeholder="Enter your estimated budget"
+              min="0"
+            />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="travelStyle">
+                <i class="fas fa-heart"></i>
+                Travel Style
+              </label>
+              <select id="travelStyle">
+                <option value="">Select travel style</option>
+                <option value="cultural">Cultural & Historical</option>
+                <option value="adventure">Adventure & Outdoor</option>
+                <option value="relaxation">Relaxation & Wellness</option>
+                <option value="nightlife">Nightlife & Entertainment</option>
+                <option value="foodie">Food & Culinary</option>
+                <option value="photography">Photography & Sightseeing</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="accommodationType">
+                <i class="fas fa-building"></i>
+                Accommodation Preference
+              </label>
+              <select id="accommodationType">
+                <option value="">Select accommodation</option>
+                <option value="hotel">Hotels</option>
+                <option value="resort">Resorts</option>
+                <option value="boutique">Boutique Hotels</option>
+                <option value="hostel">Hostels</option>
+                <option value="airbnb">Vacation Rentals</option>
+                <option value="luxury">Luxury Properties</option>
+              </select>
+            </div>
+          </div>
+
+          <button type="submit" class="submit-btn">
+            <i class="fas fa-magic"></i>
+            Generate Itinerary
+          </button>
+        </form>
+      </div>
+
+      <div id="loading" class="loading hidden">
+        <div class="spinner"></div>
+        <p>Generating your travel plan...</p>
+      </div>
+
+      <div id="results" class="results hidden">
+        <div class="results-header">
+          <h2><i class="fas fa-route"></i> Your Travel Itinerary</h2>
+        </div>        <!-- Destination Overview Section -->
+        <div class="destination-overview">
+          <div id="destinationHeader" class="destination-header">
+            <div class="destination-title">
+              <h3 id="destinationName"></h3>
+              <div class="destination-rating">
+                <div class="stars" id="destinationStars"></div>
+                <span id="destinationRating">4.5</span>
+                <span class="review-count">(<span id="reviewCount">2,847</span> reviews)</span>
+              </div>
+            </div>
+            <div class="destination-badges">
+              <span class="badge traveler-choice">Traveler's Choice</span>
+              <span class="badge best-value">Best Value</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Facts & Highlights -->
+        <div class="quick-facts">
+          <h3><i class="fas fa-lightbulb"></i> Quick Facts & Highlights</h3>
+          <div id="quickFactsGrid" class="facts-grid"></div>
+        </div>
+
+        <!-- Travel Recommendations -->
+        <div class="recommendations-section">
+          <h3><i class="fas fa-thumbs-up"></i> Travel Agent Recommendations</h3>
+          <div id="recommendationsContainer" class="recommendations-container"></div>
+        </div>
+
+        <div class="destination-info">
+          <div class="destination-images">
+            <h3><i class="fas fa-images"></i> Destination Gallery</h3>
+            <div id="imageGallery" class="image-gallery"></div>
+          </div>
+
+          <div class="cost-breakdown">
+            <h3><i class="fas fa-chart-pie"></i> Cost Breakdown</h3>
+            <div id="costDetails" class="cost-details"></div>
+          </div>
+        </div>        <!-- Local Tips Section -->
+        <div class="local-tips-section">
+          <h3><i class="fas fa-map-marked-alt"></i> Local Travel Tips</h3>
+          <div id="localTipsContainer" class="tips-container"></div>
+        </div>        <div class="itinerary-section">
+          <h3><i class="fas fa-list-alt"></i> Daily Itinerary</h3>
+          <table id="itineraryTable">
+            <thead>
+              <tr>
+                <th><i class="fas fa-calendar-day"></i> Day</th>
+                <th><i class="fas fa-clock"></i> Time</th>
+                <th><i class="fas fa-map-signs"></i> Activity</th>
+                <th><i class="fas fa-star"></i> Rating</th>
+                <th><i class="fas fa-money-bill-wave"></i> Cost</th>
+              </tr>
+            </thead>
+            <tbody id="itineraryBody"></tbody>
+          </table>
+        </div>        <!-- Similar Destinations -->
+        <div class="similar-destinations">
+          <h3><i class="fas fa-compass"></i> Similar Destinations You Might Like</h3>
+          <div id="similarDestinations" class="similar-destinations-grid"></div>
+        </div>
+
+        <!-- Booking Integration -->
+        <div class="booking-section">
+          <h3><i class="fas fa-calendar-check"></i> Book Your Trip</h3>
+          <div class="booking-partners">
+            <div class="partner-card">
+              <i class="fas fa-plane"></i>
+              <h4>Flight Booking</h4>
+              <p>Compare prices from 500+ airlines</p>
+              <button class="booking-btn" onclick="openBookingModal('flights')">
+                <i class="fas fa-external-link-alt"></i>
+                Search Flights
+              </button>
+            </div>
+            <div class="partner-card">
+              <i class="fas fa-bed"></i>
+              <h4>Hotel Booking</h4>
+              <p>Best deals on accommodations</p>
+              <button class="booking-btn" onclick="openBookingModal('hotels')">
+                <i class="fas fa-external-link-alt"></i>
+                Search Hotels
+              </button>
+            </div>
+            <div class="partner-card">
+              <i class="fas fa-car"></i>
+              <h4>Car Rental</h4>
+              <p>Convenient transportation options</p>
+              <button class="booking-btn" onclick="openBookingModal('cars')">
+                <i class="fas fa-external-link-alt"></i>
+                Rent a Car
+              </button>
+            </div>
+            <div class="partner-card">
+              <i class="fas fa-ticket-alt"></i>
+              <h4>Activities & Tours</h4>
+              <p>Skip-the-line tickets and experiences</p>
+              <button class="booking-btn" onclick="openBookingModal('activities')">
+                <i class="fas fa-external-link-alt"></i>
+                Book Activities
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Professional Guarantee -->
+        <div class="professional-guarantee">
+          <i class="fas fa-shield-alt"></i>
+          <strong>Travel Agent Guarantee:</strong> All recommendations are curated by professional travel experts with 15+ years of experience. Your satisfaction is our priority.
+        </div>
+      </div>
+    </div>
+
+    <!-- Booking Modal -->
+    <div id="bookingModal" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="modalTitle">Book Your Travel</h3>
+          <span class="close" onclick="closeBookingModal()">&times;</span>
+        </div>
+        <div class="modal-body">
+          <div class="booking-info">
+            <p><i class="fas fa-info-circle"></i> You will be redirected to our trusted booking partner to complete your reservation.</p>
+            <div class="partner-benefits">
+              <div class="benefit">
+                <i class="fas fa-shield-alt"></i>
+                <span>Secure Payment</span>
+              </div>
+              <div class="benefit">
+                <i class="fas fa-undo"></i>
+                <span>Free Cancellation</span>
+              </div>
+              <div class="benefit">
+                <i class="fas fa-headset"></i>
+                <span>24/7 Support</span>
+              </div>
+              <div class="benefit">
+                <i class="fas fa-award"></i>
+                <span>Best Price Guarantee</span>
+              </div>
+            </div>
+          </div>
+          <div class="modal-actions">
+            <button class="modal-btn secondary" onclick="closeBookingModal()">Cancel</button>
+            <button class="modal-btn primary" onclick="proceedToBooking()">
+              <i class="fas fa-external-link-alt"></i>
+              Continue to Booking
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>    <script src="api-integration.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
