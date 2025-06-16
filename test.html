@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Planner Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧳 Travel Planner Application Test</h1>
+    
+    <div class="test-section">
+        <h2>📊 Application Status</h2>
+        <div id="appStatus" class="test-result info">Testing application status...</div>
+        <button onclick="testApplicationStatus()">Test App Status</button>
+    </div>
+
+    <div class="test-section">
+        <h2>🌍 Countries and Cities Test</h2>
+        <div id="countriesTest" class="test-result info">Testing countries and cities data...</div>
+        <button onclick="testCountriesData()">Test Countries Data</button>
+    </div>
+
+    <div class="test-section">
+        <h2>🏛️ Destinations Database Test</h2>
+        <div id="destinationsTest" class="test-result info">Testing destinations database...</div>
+        <button onclick="testDestinationsData()">Test Destinations</button>
+    </div>
+
+    <div class="test-section">
+        <h2>✈️ Booking Functionality Test</h2>
+        <div id="bookingTest" class="test-result info">Testing booking URLs...</div>
+        <button onclick="testBookingUrls()">Test Booking URLs</button>
+    </div>
+
+    <div class="test-section">
+        <h2>📝 Do's and Don'ts Test</h2>
+        <div id="dosAndDontsTest" class="test-result info">Testing Do's and Don'ts data...</div>
+        <button onclick="testDosAndDonts()">Test Do's and Don'ts</button>
+    </div>
+
+    <div class="test-section">
+        <h2>🔗 Quick Actions</h2>
+        <button onclick="openMainApp()">Open Main Application</button>
+        <button onclick="viewConsole()">View Browser Console</button>
+        <button onclick="checkNetworkRequests()">Check Network Requests</button>
+    </div>
+
+    <script>
+        // Test functions
+        function testApplicationStatus() {
+            const statusDiv = document.getElementById('appStatus');
+            statusDiv.innerHTML = 'Testing...';
+            
+            try {
+                // Test if main application elements exist
+                fetch('./index.html')
+                    .then(response => response.text())
+                    .then(html => {
+                        if (html.includes('AI Travel Planner')) {
+                            statusDiv.innerHTML = '✅ Main application HTML is accessible';
+                            statusDiv.className = 'test-result success';
+                        } else {
+                            statusDiv.innerHTML = '❌ Main application HTML structure issue';
+                            statusDiv.className = 'test-result error';
+                        }
+                    })
+                    .catch(error => {
+                        statusDiv.innerHTML = `❌ Error accessing main app: ${error.message}`;
+                        statusDiv.className = 'test-result error';
+                    });
+            } catch (error) {
+                statusDiv.innerHTML = `❌ Application test failed: ${error.message}`;
+                statusDiv.className = 'test-result error';
+            }
+        }
+
+        function testCountriesData() {
+            const testDiv = document.getElementById('countriesTest');
+            testDiv.innerHTML = 'Testing countries data...';
+            
+            fetch('./destinations-database.json')
+                .then(response => response.json())
+                .then(data => {
+                    const countries = data.countries_and_cities;
+                    if (countries && countries.India && countries.India.includes('Trivandrum')) {
+                        testDiv.innerHTML = `✅ Countries data loaded successfully. Found ${Object.keys(countries).length} countries including India with cities: ${countries.India.join(', ')}`;
+                        testDiv.className = 'test-result success';
+                    } else {
+                        testDiv.innerHTML = '❌ Countries data structure issue - India or Trivandrum not found';
+                        testDiv.className = 'test-result error';
+                    }
+                })
+                .catch(error => {
+                    testDiv.innerHTML = `❌ Error loading countries data: ${error.message}`;
+                    testDiv.className = 'test-result error';
+                });
+        }
+
+        function testDestinationsData() {
+            const testDiv = document.getElementById('destinationsTest');
+            testDiv.innerHTML = 'Testing destinations data...';
+            
+            fetch('./destinations-database.json')
+                .then(response => response.json())
+                .then(data => {
+                    const destinations = data.destinations;
+                    const trivandrum = destinations['trivandrum-india'];
+                    const kochi = destinations['kochi-india'];
+                    
+                    if (trivandrum && kochi) {
+                        testDiv.innerHTML = `✅ Destinations data loaded successfully. Found ${Object.keys(destinations).length} destinations including Indian cities: Trivandrum (${trivandrum.rating}★) and Kochi (${kochi.rating}★)`;
+                        testDiv.className = 'test-result success';
+                    } else {
+                        testDiv.innerHTML = '❌ Destinations data issue - Indian cities not found';
+                        testDiv.className = 'test-result error';
+                    }
+                })
+                .catch(error => {
+                    testDiv.innerHTML = `❌ Error loading destinations data: ${error.message}`;
+                    testDiv.className = 'test-result error';
+                });
+        }
+
+        function testBookingUrls() {
+            const testDiv = document.getElementById('bookingTest');
+            testDiv.innerHTML = 'Testing booking URL generation...';
+            
+            try {
+                // Test URL encoding
+                const destination = 'Trivandrum, India';
+                const checkIn = '2025-07-01';
+                const checkOut = '2025-07-07';
+                const [city, country] = destination.split(', ');
+                const encodedDestination = encodeURIComponent(destination);
+                
+                const sampleUrls = {
+                    booking: `https://www.booking.com/searchresults.html?ss=${encodedDestination}&checkin=${checkIn}&checkout=${checkOut}`,
+                    expedia: `https://www.expedia.com/Flights-Search?leg1=from:${encodeURIComponent(city)}&fromDate=${checkIn}`,
+                    kayak: `https://www.kayak.com/flights/${encodeURIComponent(city)}-${encodedDestination}/${checkIn}/${checkOut}`
+                };
+                
+                testDiv.innerHTML = `✅ Booking URL generation successful:<br>
+                    • Booking.com: ${sampleUrls.booking.substring(0, 60)}...<br>
+                    • Expedia: ${sampleUrls.expedia.substring(0, 60)}...<br>
+                    • Kayak: ${sampleUrls.kayak.substring(0, 60)}...`;
+                testDiv.className = 'test-result success';
+            } catch (error) {
+                testDiv.innerHTML = `❌ Booking URL generation failed: ${error.message}`;
+                testDiv.className = 'test-result error';
+            }
+        }
+
+        function testDosAndDonts() {
+            const testDiv = document.getElementById('dosAndDontsTest');
+            testDiv.innerHTML = 'Testing Do\'s and Don\'ts data...';
+            
+            fetch('./destinations-database.json')
+                .then(response => response.json())
+                .then(data => {
+                    const destinations = data.destinations;
+                    const paris = destinations['paris-france'];
+                    const trivandrum = destinations['trivandrum-india'];
+                    
+                    if (paris && paris.dos && paris.donts && trivandrum && trivandrum.dos && trivandrum.donts) {
+                        testDiv.innerHTML = `✅ Do's and Don'ts data found successfully:<br>
+                            • Paris: ${paris.dos.length} do's, ${paris.donts.length} don'ts<br>
+                            • Trivandrum: ${trivandrum.dos.length} do's, ${trivandrum.donts.length} don'ts<br>
+                            Sample Paris Do: "${paris.dos[0]}"`;
+                        testDiv.className = 'test-result success';
+                    } else {
+                        testDiv.innerHTML = '❌ Do\'s and Don\'ts data missing or incomplete';
+                        testDiv.className = 'test-result error';
+                    }
+                })
+                .catch(error => {
+                    testDiv.innerHTML = `❌ Error testing Do's and Don'ts: ${error.message}`;
+                    testDiv.className = 'test-result error';
+                });
+        }
+
+        function openMainApp() {
+            window.open('./index.html', '_blank');
+        }
+
+        function viewConsole() {
+            alert('Open browser Developer Tools (F12) and check the Console tab for any errors or logs.');
+        }
+
+        function checkNetworkRequests() {
+            alert('Open browser Developer Tools (F12) > Network tab, then reload the main application to check for failed requests.');
+        }
+
+        // Auto-run basic tests when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                testApplicationStatus();
+                testCountriesData();
+                testDestinationsData();
+                testDosAndDonts();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

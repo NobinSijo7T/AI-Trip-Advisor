@@ -13,8 +13,8 @@ const API_CONFIG = {
     baseUrl: 'https://api.foursquare.com/v3/places'
   },
   openTripMap: {
-    key: 'DEMO_OPENTRIPMAP_API_KEY', // Replace with actual key from OpenTripMap
-    baseUrl: 'https://api.opentripmap.com/0.1/en/places'
+    key: 'f5901a50c5msh85c2e1a8bbbc601p1b062cjsn84561fc7f1e3', // Replace with actual key from OpenTripMap
+    baseUrl: 'https://opentripmap-places-v1.p.rapidapi.com/en/places'
   },
   unsplash: {
     key: 'l9C2fGkxvfA03JTCRlzhSv4NwI-KjhwhBFWHCMUGqR8', // Replace with actual key from Unsplash
@@ -23,6 +23,11 @@ const API_CONFIG = {
   pexels: {
     key: 'DEMO_PEXELS_API_KEY', // Replace with actual key from Pexels
     baseUrl: 'https://api.pexels.com/v1'
+  },
+  deepseek: {
+    key: 'YOUR_DEEPSEEK_API_KEY', // Replace with actual Deepseek API key
+    baseUrl: 'https://api.deepseek.com/v1',
+    model: 'deepseek-chat'
   }
 };
 
@@ -285,15 +290,16 @@ class ImageAPI {  static async fetchImages(query, count = 3) {
     
     // If we can't parse the query, enhance it with tourism-related terms
     return `${query} landmarks travel destination`;
-  }
-  static async fetchUnsplashImages(query, count) {
-    const url = `${API_CONFIG.unsplash.baseUrl}/search/photos?query=${encodeURIComponent(query)}&per_page=${count}&orientation=landscape`;
+  }  static async fetchUnsplashImages(query, count) {
+    // Enhanced search with site-specific terms
+    const enhancedQuery = this.createSiteSpecificQuery(query);
+    const url = `${API_CONFIG.unsplash.baseUrl}/search/photos?query=${encodeURIComponent(enhancedQuery)}&per_page=${count * 2}&orientation=landscape&order_by=relevant`;
     const headers = {
       'Authorization': `Client-ID ${API_CONFIG.unsplash.key}`
     };
 
     try {
-      console.log('Fetching images from Unsplash with URL:', url);
+      console.log('Fetching site-specific images from Unsplash:', enhancedQuery);
       const response = await fetch(url, { headers });
       
       if (!response.ok) {
@@ -310,17 +316,123 @@ class ImageAPI {  static async fetchImages(query, count = 3) {
         throw new Error('Unexpected data structure from Unsplash API');
       }
       
-      return data.results.map(photo => ({
+      // Filter and sort results for better quality
+      const filteredResults = data.results
+        .filter(photo => photo.likes > 10) // Only high-quality photos
+        .sort((a, b) => b.likes - a.likes) // Sort by popularity
+        .slice(0, count); // Take only what we need
+      
+      return filteredResults.map(photo => ({
         url: photo.urls.regular,
         thumbnail: photo.urls.thumb,
-        alt: photo.alt_description || query,
+        alt: photo.alt_description || enhancedQuery,
         photographer: photo.user.name,
-        source: 'unsplash'
+        photographerUrl: photo.user.links.html,
+        source: 'unsplash',
+        likes: photo.likes,
+        downloadUrl: photo.links.download_location
       }));
     } catch (error) {
       console.error('Unsplash API error:', error);
       return [];
     }
+  }
+
+  static createSiteSpecificQuery(originalQuery) {
+    // Extract location information and create targeted searches
+    const query = originalQuery.toLowerCase();
+    
+    // Site-specific enhancement patterns
+    const enhancements = {
+      'historic sites': 'historic architecture monuments ancient ruins',
+      'scenic views': 'landscape panoramic view mountains valleys coastline',
+      'local cuisine': 'traditional food local dishes restaurant culture',
+      'shopping areas': 'markets shopping district bazaar stores boutiques',
+      'photo spots': 'instagram photography scenic beautiful viewpoint',
+      'art & culture': 'museums art galleries cultural heritage traditional'
+    };
+    
+    // Check if query contains specific terms and enhance accordingly
+    for (const [key, enhancement] of Object.entries(enhancements)) {
+      if (query.includes(key)) {
+        return `${originalQuery} ${enhancement}`;
+      }
+    }
+    
+    // Default enhancement for destination queries
+    if (query.includes('landmarks') || query.includes('tourist')) {
+      return `${originalQuery} famous attractions iconic sights`;
+    }
+    
+    return `${originalQuery} travel tourism destination`;
+  }
+
+  static async fetchSiteSpecificImages(destination, siteType = 'general', count = 6) {
+    const specificQueries = this.generateSiteSpecificQueries(destination, siteType);
+    const imageResults = [];
+    
+    // Fetch images for each specific query
+    for (const query of specificQueries) {
+      try {
+        const images = await this.fetchUnsplashImages(query, Math.ceil(count / specificQueries.length));
+        imageResults.push(...images);
+      } catch (error) {
+        console.warn(`Failed to fetch images for query: ${query}`, error);
+      }
+    }
+    
+    // Remove duplicates and return best results
+    const uniqueImages = imageResults.filter((image, index, self) => 
+      index === self.findIndex(img => img.url === image.url)
+    );
+    
+    return uniqueImages.slice(0, count);
+  }
+
+  static generateSiteSpecificQueries(destination, siteType) {
+    const [city, country] = destination.split(', ');
+    const baseLocation = `${city} ${country}`;
+    
+    const queryMaps = {
+      general: [
+        `${baseLocation} skyline cityscape`,
+        `${baseLocation} landmarks famous attractions`,
+        `${baseLocation} architecture buildings`,
+        `${baseLocation} street view urban`
+      ],
+      attractions: [
+        `${baseLocation} monuments historic sites`,
+        `${baseLocation} museums cultural sites`,
+        `${baseLocation} temples churches religious`,
+        `${baseLocation} parks gardens nature`
+      ],
+      cuisine: [
+        `${baseLocation} food traditional cuisine`,
+        `${baseLocation} restaurants local dishes`,
+        `${baseLocation} street food markets`,
+        `${country} traditional food culture`
+      ],
+      culture: [
+        `${baseLocation} festivals celebrations`,
+        `${baseLocation} traditional dress culture`,
+        `${baseLocation} art galleries museums`,
+        `${country} cultural heritage traditions`
+      ],
+      nature: [
+        `${baseLocation} nature landscape`,
+        `${baseLocation} beaches coastline`,
+        `${baseLocation} mountains hills`,
+        `${baseLocation} parks gardens green spaces`
+      ],
+      nightlife: [
+        `${baseLocation} night lights illuminated`,
+        `${baseLocation} nightlife entertainment`,
+        `${baseLocation} sunset golden hour`,
+        `${baseLocation} evening atmosphere`
+      ]
+    };
+    
+    return queryMaps[siteType] || queryMaps.general;
   }
 
   static async fetchPexelsImages(query, count) {
@@ -357,6 +469,237 @@ class ImageAPI {  static async fetchImages(query, count = 3) {
       });
     }
     return placeholderImages;
+  }
+}
+
+// Deepseek AI API Integration for Real-time Tourism Information
+class DeepseekAPI {
+  static async fetchRealTimeTourismInfo(city, country, infoType = 'general') {
+    if (!API_CONFIG.deepseek.key || API_CONFIG.deepseek.key === 'YOUR_DEEPSEEK_API_KEY') {
+      console.warn('Deepseek API key not configured, using fallback data');
+      return this.getFallbackTourismInfo(city, country, infoType);
+    }
+
+    const url = `${API_CONFIG.deepseek.baseUrl}/chat/completions`;
+    
+    const prompts = {
+      general: `Provide current real-time information about ${city}, ${country} for tourists in 2025. Include: current weather trends, popular events happening now, recent developments, updated transportation info, current safety status, trending attractions, and local tips. Format as a detailed tourism brief.`,
+      
+      attractions: `List the top 10 must-visit attractions in ${city}, ${country} as of 2025. Include current operating hours, ticket prices in local currency, best visiting times, current visitor reviews, and any recent updates or renovations. Focus on accuracy and current information.`,
+      
+      restaurants: `Recommend 8-10 best restaurants and local food experiences in ${city}, ${country} for 2025. Include current price ranges, operating hours, popular dishes, current reviews, and any new trendy places. Focus on authentic local cuisine and current hotspots.`,
+      
+      events: `What are the current and upcoming events, festivals, exhibitions, and cultural activities in ${city}, ${country} for the next 3 months? Include dates, locations, ticket information, and significance. Focus on 2025 events and current happenings.`,
+      
+      transportation: `Provide current transportation information for ${city}, ${country} including: public transport updates, ride-sharing availability, current prices, airport connections, traffic patterns, and best ways to get around. Include 2025 updates and current status.`,
+      
+      safety: `Current safety and health information for travelers to ${city}, ${country} in 2025. Include: current health protocols, safety advisories, areas to avoid, emergency contacts, medical facilities, and recent safety updates for tourists.`
+    };
+
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${API_CONFIG.deepseek.key}`
+    };
+
+    const requestBody = {
+      model: API_CONFIG.deepseek.model,
+      messages: [
+        {
+          role: "system",
+          content: "You are a professional travel information assistant providing accurate, current, and helpful tourism information. Always provide practical, actionable advice with specific details like prices, hours, and current conditions."
+        },
+        {
+          role: "user",
+          content: prompts[infoType] || prompts.general
+        }
+      ],
+      max_tokens: 1500,
+      temperature: 0.7,
+      stream: false
+    };
+
+    try {
+      console.log(`Fetching real-time ${infoType} info for ${city}, ${country} from Deepseek AI`);
+      
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(requestBody)
+      });
+
+      if (!response.ok) {
+        throw new Error(`Deepseek API error: ${response.status} ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      
+      if (data.choices && data.choices[0] && data.choices[0].message) {
+        const content = data.choices[0].message.content;
+        return this.parseAIResponse(content, infoType);
+      } else {
+        throw new Error('Invalid response format from Deepseek API');
+      }
+    } catch (error) {
+      console.error('Deepseek API error:', error);
+      return this.getFallbackTourismInfo(city, country, infoType);
+    }
+  }
+
+  static parseAIResponse(content, infoType) {
+    // Parse the AI response into structured data
+    const sections = content.split('\n\n').filter(section => section.trim());
+    
+    const parsedData = {
+      type: infoType,
+      content: content,
+      sections: sections,
+      lastUpdated: new Date().toISOString(),
+      source: 'Deepseek AI'
+    };
+
+    // Extract specific information based on type
+    switch (infoType) {
+      case 'attractions':
+        parsedData.attractions = this.extractAttractions(content);
+        break;
+      case 'restaurants':
+        parsedData.restaurants = this.extractRestaurants(content);
+        break;
+      case 'events':
+        parsedData.events = this.extractEvents(content);
+        break;
+      case 'transportation':
+        parsedData.transportation = this.extractTransportation(content);
+        break;
+      case 'safety':
+        parsedData.safety = this.extractSafety(content);
+        break;
+      default:
+        parsedData.general = this.extractGeneral(content);
+    }
+
+    return parsedData;
+  }
+
+  static extractAttractions(content) {
+    // Extract attraction information using regex patterns
+    const attractions = [];
+    const lines = content.split('\n');
+    
+    lines.forEach(line => {
+      // Look for numbered attractions or bullet points
+      const match = line.match(/^(?:\d+\.|\*|\-)\s*(.+?)(?:\s*-\s*(.+))?$/);
+      if (match) {
+        attractions.push({
+          name: match[1].trim(),
+          description: match[2] ? match[2].trim() : '',
+          rawLine: line
+        });
+      }
+    });
+    
+    return attractions.slice(0, 10); // Limit to top 10
+  }
+
+  static extractRestaurants(content) {
+    const restaurants = [];
+    const lines = content.split('\n');
+    
+    lines.forEach(line => {
+      const match = line.match(/^(?:\d+\.|\*|\-)\s*(.+?)(?:\s*-\s*(.+))?$/);
+      if (match) {
+        restaurants.push({
+          name: match[1].trim(),
+          description: match[2] ? match[2].trim() : '',
+          rawLine: line
+        });
+      }
+    });
+    
+    return restaurants.slice(0, 10);
+  }
+
+  static extractEvents(content) {
+    const events = [];
+    const lines = content.split('\n');
+    
+    lines.forEach(line => {
+      const match = line.match(/^(?:\d+\.|\*|\-)\s*(.+?)(?:\s*-\s*(.+))?$/);
+      if (match) {
+        events.push({
+          name: match[1].trim(),
+          details: match[2] ? match[2].trim() : '',
+          rawLine: line
+        });
+      }
+    });
+    
+    return events;
+  }
+
+  static extractTransportation(content) {
+    return {
+      summary: content.substring(0, 500),
+      details: content
+    };
+  }
+
+  static extractSafety(content) {
+    return {
+      summary: content.substring(0, 500),
+      details: content
+    };
+  }
+
+  static extractGeneral(content) {
+    return {
+      summary: content.substring(0, 500),
+      details: content
+    };
+  }
+
+  static getFallbackTourismInfo(city, country, infoType) {
+    const fallbackData = {
+      type: infoType,
+      content: `Sample tourism data for ${city}, ${country}. Configure Deepseek API key for real-time information.`,
+      lastUpdated: new Date().toISOString(),
+      source: 'Fallback Data',
+      note: 'This is sample data. Configure API keys for live information.'
+    };
+
+    switch (infoType) {
+      case 'attractions':
+        fallbackData.attractions = [
+          { name: 'Historic City Center', description: 'Beautiful architecture and cultural sites' },
+          { name: 'Local Museum', description: 'Rich history and artifacts' },
+          { name: 'Central Park/Garden', description: 'Green space for relaxation' },
+          { name: 'Traditional Market', description: 'Local crafts and souvenirs' },
+          { name: 'Religious Sites', description: 'Temples, churches, or mosques' }
+        ];
+        break;
+      case 'restaurants':
+        fallbackData.restaurants = [
+          { name: 'Local Cuisine Restaurant', description: 'Traditional dishes and local flavors' },
+          { name: 'Street Food Corner', description: 'Authentic street food experience' },
+          { name: 'Fine Dining', description: 'Upscale dining with international cuisine' },
+          { name: 'Cafe Culture', description: 'Coffee and light meals' }
+        ];
+        break;
+      case 'events':
+        fallbackData.events = [
+          { name: 'Cultural Festival', details: 'Annual celebration of local culture' },
+          { name: 'Music Events', details: 'Live performances and concerts' },
+          { name: 'Art Exhibitions', details: 'Local and international art displays' }
+        ];
+        break;
+      default:
+        fallbackData.general = {
+          summary: `${city} offers rich cultural experiences, historical attractions, delicious cuisine, and warm hospitality. Best visited during pleasant weather months.`,
+          details: fallbackData.content
+        };
+    }
+
+    return fallbackData;
   }
 }
 

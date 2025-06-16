@@ -1,0 +1,414 @@
+{
+  "destinations": {    "paris-france": {
+      "name": "Paris, France",
+      "country": "France",
+      "rating": 4.6,
+      "reviewCount": 15428,
+      "highlights": ["Eiffel Tower", "Louvre Museum", "Seine River", "Montmartre"],
+      "bestTime": "April-June, September-October",
+      "currency": "EUR (€)",
+      "language": "French",
+      "timezone": "CET (UTC+1)",
+      "population": "2.2 million",
+      "founded": "3rd century BC",
+      "dos": [
+        "Learn basic French phrases like 'Bonjour' and 'Merci'",
+        "Try authentic French pastries from local bakeries",
+        "Visit museums early morning to avoid crowds",
+        "Take evening Seine river cruises for best views",
+        "Explore neighborhoods beyond tourist areas",
+        "Dress well - Parisians appreciate good style"
+      ],
+      "donts": [
+        "Don't eat at tourist restaurants near major attractions",
+        "Don't be loud in public transportation",
+        "Don't expect shops to be open on Sundays",
+        "Don't tip excessively - 5-10% is sufficient",
+        "Don't wear athletic wear outside of gyms",
+        "Don't rush through conversations - take time to be polite"
+      ],
+      "images": [
+        "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=800&h=600&fit=crop"
+      ]
+    },    "london-uk": {
+      "name": "London, United Kingdom",
+      "country": "United Kingdom", 
+      "rating": 4.5,
+      "reviewCount": 23891,
+      "highlights": ["Big Ben", "Tower Bridge", "British Museum", "Thames River"],
+      "bestTime": "May-September",
+      "currency": "GBP (£)",
+      "language": "English",
+      "timezone": "GMT (UTC+0)",
+      "population": "8.9 million",
+      "founded": "43 AD",
+      "dos": [
+        "Stand on the right side of escalators in the Underground",
+        "Carry an umbrella - weather can change quickly",
+        "Book restaurant reservations in advance",
+        "Try traditional afternoon tea experience",
+        "Use contactless payment - widely accepted",
+        "Respect queuing etiquette - it's taken seriously"
+      ],
+      "donts": [
+        "Don't block tube doors when boarding",
+        "Don't expect free water at restaurants",
+        "Don't drive in central London unless necessary",
+        "Don't touch the Queen's Guards or horses",
+        "Don't be surprised by early pub closing times",
+        "Don't assume all museums are free (though many are)"
+      ],
+      "images": [
+        "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1529655683826-aba9b3e77383?w=800&h=600&fit=crop"
+      ]
+    },    "rome-italy": {
+      "name": "Rome, Italy",
+      "country": "Italy",
+      "rating": 4.7,
+      "reviewCount": 19634,
+      "highlights": ["Colosseum", "Vatican City", "Trevi Fountain", "Roman Forum"],
+      "bestTime": "April-June, September-October",
+      "currency": "EUR (€)",
+      "language": "Italian",
+      "timezone": "CET (UTC+1)",
+      "population": "2.8 million",
+      "founded": "753 BC",
+      "dos": [
+        "Dress modestly when visiting churches and Vatican",
+        "Book tickets online for major attractions to skip lines",
+        "Try authentic Roman dishes like Carbonara and Cacio e Pepe",
+        "Walk on ancient cobblestones with comfortable shoes",
+        "Throw a coin in Trevi Fountain with your right hand",
+        "Learn basic Italian greetings - locals appreciate the effort"
+      ],
+      "donts": [
+        "Don't eat dinner before 8 PM - restaurants open late",
+        "Don't order cappuccino after meals - it's breakfast only",
+        "Don't touch ancient monuments and artifacts",
+        "Don't expect air conditioning everywhere in summer",
+        "Don't drink from the tap near monuments - use nasoni fountains",
+        "Don't wear flip-flops to Vatican - dress code is strict"
+      ],
+      "images": [
+        "https://images.unsplash.com/photo-1515542622106-78bda8ba0e5b?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=800&h=600&fit=crop"
+      ]
+    },
+    "newyorkcity-unitedstates": {
+      "name": "New York City, USA",
+      "country": "United States",
+      "rating": 4.5,
+      "reviewCount": 23591,
+      "highlights": ["Times Square", "Central Park", "Statue of Liberty", "Broadway"],
+      "bestTime": "April-June, September-November",
+      "currency": "USD ($)",
+      "language": "English",
+      "timezone": "EST (UTC-5)",
+      "population": "8.4 million",
+      "founded": "1624",
+      "images": [
+        "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1518391846015-55a9cc003b25?w=800&h=600&fit=crop"
+      ]
+    },
+    "sydney-australia": {
+      "name": "Sydney, Australia",
+      "country": "Australia",
+      "rating": 4.5,
+      "reviewCount": 14567,
+      "highlights": ["Sydney Opera House", "Harbour Bridge", "Bondi Beach", "The Rocks"],
+      "bestTime": "September-November, March-May",
+      "currency": "AUD (A$)",
+      "language": "English",
+      "timezone": "AEDT (UTC+11)",
+      "population": "5.3 million",
+      "founded": "1788",
+      "images": [
+        "https://images.unsplash.com/photo-1524820197278-540916411e20?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1546268060-2592ff93ee24?w=800&h=600&fit=crop"
+      ]
+    },
+    "tokyo-japan": {
+      "name": "Tokyo, Japan",
+      "country": "Japan",
+      "rating": 4.7,
+      "reviewCount": 12847,
+      "highlights": ["Cherry Blossoms", "Senso-ji Temple", "Tokyo Skytree", "Shibuya Crossing"],
+      "bestTime": "March-May, September-November",
+      "currency": "JPY (¥)",
+      "language": "Japanese",
+      "timezone": "JST (UTC+9)",
+      "population": "13.9 million",
+      "founded": "1457",
+      "images": [
+        "https://images.unsplash.com/photo-1557409518-691ebcd96022?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1536098561742-ca998e48cbcc?w=800&h=600&fit=crop"
+      ]
+    },    "trivandrum-india": {
+      "name": "Trivandrum, India",
+      "country": "India",
+      "rating": 4.4,
+      "reviewCount": 7236,
+      "highlights": ["Padmanabhaswamy Temple", "Kovalam Beach", "Napier Museum", "Kuthira Malika Palace"],
+      "bestTime": "October-February",
+      "currency": "INR (₹)",
+      "language": "Malayalam, English",
+      "timezone": "IST (UTC+5:30)",
+      "population": "1.7 million",
+      "founded": "1000 AD",
+      "dos": [
+        "Dress modestly when visiting temples",
+        "Try authentic Kerala cuisine and coconut water",
+        "Respect local customs and traditions",
+        "Use sunscreen and stay hydrated",
+        "Learn basic Malayalam greetings",
+        "Book Ayurvedic treatments in advance"
+      ],
+      "donts": [
+        "Don't wear leather items in temples",
+        "Don't drink tap water - stick to bottled water",
+        "Don't point feet towards people or religious items",
+        "Don't eat street food if you have a sensitive stomach",
+        "Don't ignore monsoon season warnings",
+        "Don't be surprised by power cuts during summer"
+      ],
+      "images": [
+        "https://images.unsplash.com/photo-1583144568008-76a4535f4002?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1590050752117-238cb0fb12b1?w=800&h=600&fit=crop"
+      ]
+    },
+    "kochi-india": {
+      "name": "Kochi, India",
+      "country": "India",
+      "rating": 4.6,
+      "reviewCount": 9853,
+      "highlights": ["Fort Kochi", "Chinese Fishing Nets", "Mattancherry Palace", "Jewish Synagogue"],
+      "bestTime": "October-March",
+      "currency": "INR (₹)",
+      "language": "Malayalam, English",
+      "timezone": "IST (UTC+5:30)",
+      "population": "2.1 million",
+      "founded": "1341",
+      "dos": [
+        "Take a sunset cruise through the backwaters",
+        "Explore Jew Town and antique shops",
+        "Try fresh seafood at local restaurants",
+        "Watch Kathakali dance performances",
+        "Visit spice markets for authentic spices",
+        "Use auto-rickshaws for short distances"
+      ],
+      "donts": [
+        "Don't forget to bargain in markets",
+        "Don't miss covering your head in religious places",
+        "Don't swim alone in unknown waters",
+        "Don't expect everything to run on time",
+        "Don't refuse hospitality - it's considered rude",
+        "Don't photograph people without permission"
+      ],
+      "images": [
+        "https://images.unsplash.com/photo-1593693298601-2d7de36b002c?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1581068506097-9feb8dd2e0af?w=800&h=600&fit=crop"
+      ]
+    },    "mumbai-india": {
+      "name": "Mumbai, India",
+      "country": "India",
+      "rating": 4.5,
+      "reviewCount": 18742,
+      "highlights": ["Gateway of India", "Marine Drive", "Elephanta Caves", "Chhatrapati Shivaji Terminus"],
+      "bestTime": "November-February",
+      "currency": "INR (₹)",
+      "language": "Marathi, Hindi, English",
+      "timezone": "IST (UTC+5:30)",
+      "population": "20.4 million",
+      "founded": "1507",
+      "dos": [
+        "Use local trains during non-peak hours",
+        "Try street food at Mohammed Ali Road and Juhu Beach",
+        "Book movie tickets at iconic single-screen theaters",
+        "Walk along Marine Drive in the evening",
+        "Visit Dharavi for authentic local experience",
+        "Carry cash as many places don't accept cards"
+      ],
+      "donts": [
+        "Don't travel in local trains during rush hours (7-11 AM, 5-9 PM)",
+        "Don't drink tap water - stick to bottled water",
+        "Don't venture out alone late at night in unknown areas",
+        "Don't be surprised by traffic jams and honking",
+        "Don't ignore monsoon flooding warnings",
+        "Don't refuse chai when offered - it's part of culture"
+      ],
+      "images": [
+        "https://images.unsplash.com/photo-1529253355930-ddbe423a2ac7?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1595658658481-d53d3f999875?w=800&h=600&fit=crop"
+      ]
+    },    "delhi-india": {
+      "name": "Delhi, India",
+      "country": "India",
+      "rating": 4.4,
+      "reviewCount": 15683,
+      "highlights": ["Red Fort", "India Gate", "Qutub Minar", "Humayun's Tomb"],
+      "bestTime": "October-March",
+      "currency": "INR (₹)",
+      "language": "Hindi, English",
+      "timezone": "IST (UTC+5:30)",
+      "population": "16.8 million",
+      "founded": "6th century BC",
+      "dos": [
+        "Use Delhi Metro for efficient transportation",
+        "Try street food at Chandni Chowk and Connaught Place",
+        "Visit monuments early morning to avoid crowds",
+        "Carry a pollution mask during winter months",
+        "Bargain at markets like Karol Bagh and Lajpat Nagar",
+        "Respect security checks at monuments"
+      ],
+      "donts": [
+        "Don't drink tap water - always use bottled water",
+        "Don't walk alone in isolated areas after dark",
+        "Don't be surprised by aggressive vendors",
+        "Don't ignore air quality warnings",
+        "Don't eat raw salads from street vendors",
+        "Don't expect everything to be on time"
+      ],
+      "images": [
+        "https://images.unsplash.com/photo-1587474260584-136574528ed5?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1555952238-7d217fca3905?w=800&h=600&fit=crop"
+      ]
+    },    "jaipur-india": {
+      "name": "Jaipur, India",
+      "country": "India",
+      "rating": 4.6,
+      "reviewCount": 14025,
+      "highlights": ["Amber Fort", "Hawa Mahal", "City Palace", "Jantar Mantar"],
+      "bestTime": "November-February",
+      "currency": "INR (₹)",
+      "language": "Hindi, Rajasthani, English",
+      "timezone": "IST (UTC+5:30)",
+      "population": "3.9 million",
+      "founded": "1727",
+      "dos": [
+        "Visit forts early morning to avoid heat and crowds",
+        "Try traditional Rajasthani cuisine like Dal Baati Churma",
+        "Shop for textiles and jewelry in local bazaars",
+        "Respect photography rules in palaces and temples",
+        "Hire official guides for historical sites",
+        "Carry water and wear comfortable walking shoes"
+      ],
+      "donts": [
+        "Don't ignore dress codes at religious sites",
+        "Don't buy expensive items without bargaining",
+        "Don't venture out during extreme summer heat (May-June)",
+        "Don't touch or climb on ancient structures",
+        "Don't expect English everywhere - learn basic Hindi phrases",
+        "Don't refuse traditional hospitality - it's considered rude"
+      ],
+      "images": [
+        "https://images.unsplash.com/photo-1599661046289-e31897846e41?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1552555952-d3ae0195110d?w=800&h=600&fit=crop"
+      ]
+    },
+    "varanasi-india": {
+      "name": "Varanasi, India",
+      "country": "India",
+      "rating": 4.5,
+      "reviewCount": 9586,
+      "highlights": ["Ganges River", "Dashashwamedh Ghat", "Kashi Vishwanath Temple", "Sarnath"],
+      "bestTime": "November-February",
+      "currency": "INR (₹)",
+      "language": "Hindi, Bhojpuri, English",
+      "timezone": "IST (UTC+5:30)",
+      "population": "1.2 million",
+      "founded": "1800 BCE",
+      "dos": [
+        "Take a sunrise boat ride on the Ganges",
+        "Respect the spiritual significance of ghats",
+        "Try famous Varanasi street food like chaat and lassi",
+        "Visit during Ganga Aarti for spiritual experience",
+        "Dress modestly when visiting temples",
+        "Book accommodations near ghats for authentic experience"
+      ],
+      "donts": [
+        "Don't point feet towards the river or temples",
+        "Don't take photos of funeral ceremonies without permission",
+        "Don't drink Ganges water - stick to bottled water",
+        "Don't wear leather items near temples",
+        "Don't be surprised by crowds and chaos - it's part of the experience",
+        "Don't ignore local customs and traditions"
+      ],
+      "images": [
+        "https://images.unsplash.com/photo-1561361058-c21b495a4133?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1604341529117-43188274026f?w=800&h=600&fit=crop"
+      ]
+    },
+    "agra-india": {
+      "name": "Agra, India",
+      "country": "India",
+      "rating": 4.7,
+      "reviewCount": 20378,
+      "highlights": ["Taj Mahal", "Agra Fort", "Fatehpur Sikri", "Itimad-ud-Daulah's Tomb"],
+      "bestTime": "November-February",
+      "currency": "INR (₹)",
+      "language": "Hindi, English",
+      "timezone": "IST (UTC+5:30)",
+      "population": "1.7 million",
+      "founded": "1504",
+      "images": [
+        "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1580868644583-9531ffcc7ef9?w=800&h=600&fit=crop"
+      ]
+    },
+    "goa-india": {
+      "name": "Goa, India",
+      "country": "India",
+      "rating": 4.6,
+      "reviewCount": 16782,
+      "highlights": ["Baga Beach", "Calangute Beach", "Basilica of Bom Jesus", "Fort Aguada"],
+      "bestTime": "November-February",
+      "currency": "INR (₹)",
+      "language": "Konkani, Marathi, English",
+      "timezone": "IST (UTC+5:30)",
+      "population": "1.8 million",
+      "founded": "1510",
+      "images": [
+        "https://images.unsplash.com/photo-1582972236019-753a44b860f6?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=800&h=600&fit=crop"
+      ]
+    },
+    "bangalore-india": {
+      "name": "Bangalore, India",
+      "country": "India",
+      "rating": 4.3,
+      "reviewCount": 13456,
+      "highlights": ["Lalbagh Botanical Garden", "Cubbon Park", "Bangalore Palace", "ISKCON Temple"],
+      "bestTime": "November-February",
+      "currency": "INR (₹)",
+      "language": "Kannada, English",
+      "timezone": "IST (UTC+5:30)",
+      "population": "8.4 million",
+      "founded": "1537",
+      "images": [
+        "https://images.unsplash.com/photo-1588416499018-d8c621ffc767?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1596176530529-78163a4f7af2?w=800&h=600&fit=crop"
+      ]
+    }
+  },
+  "countries_and_cities": {
+    "Australia": ["Sydney", "Melbourne", "Brisbane", "Perth"],
+    "Argentina": ["Buenos Aires", "Córdoba", "Rosario", "Mendoza"],
+    "Brazil": ["Rio de Janeiro", "São Paulo", "Salvador", "Brasília"],
+    "Canada": ["Toronto", "Vancouver", "Montreal", "Calgary"],
+    "France": ["Paris", "Lyon", "Marseille", "Nice"],
+    "Germany": ["Berlin", "Munich", "Hamburg", "Cologne"],
+    "India": ["Mumbai", "Delhi", "Bangalore", "Jaipur", "Agra", "Varanasi", "Goa", "Trivandrum", "Kochi"],
+    "Italy": ["Rome", "Milan", "Venice", "Florence"],
+    "Japan": ["Tokyo", "Osaka", "Kyoto", "Hiroshima"],
+    "Netherlands": ["Amsterdam", "Rotterdam", "The Hague", "Utrecht"],
+    "Singapore": ["Singapore"],
+    "South Africa": ["Cape Town", "Johannesburg", "Durban", "Pretoria"],
+    "Spain": ["Barcelona", "Madrid", "Seville", "Valencia"],
+    "Thailand": ["Bangkok", "Chiang Mai", "Phuket", "Pattaya"],
+    "United Kingdom": ["London", "Edinburgh", "Manchester", "Liverpool"],
+    "United States": ["New York City", "Los Angeles", "Chicago", "Las Vegas"]
+  }
+}

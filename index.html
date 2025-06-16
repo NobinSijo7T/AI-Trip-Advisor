@@ -193,11 +193,46 @@
             <h3><i class="fas fa-chart-pie"></i> Cost Breakdown</h3>
             <div id="costDetails" class="cost-details"></div>
           </div>
-        </div>        <!-- Local Tips Section -->
+        </div>        <!-- Real-time AI Tourism Information -->
+        <div class="ai-tourism-section">
+          <h3><i class="fas fa-robot"></i> Real-time Tourism Information</h3>
+          <div class="ai-info-tabs">
+            <button class="ai-tab-btn active" onclick="switchAITab('general')" data-tab="general">
+              <i class="fas fa-info-circle"></i> Overview
+            </button>
+            <button class="ai-tab-btn" onclick="switchAITab('attractions')" data-tab="attractions">
+              <i class="fas fa-map-marker-alt"></i> Attractions
+            </button>
+            <button class="ai-tab-btn" onclick="switchAITab('restaurants')" data-tab="restaurants">
+              <i class="fas fa-utensils"></i> Dining
+            </button>
+            <button class="ai-tab-btn" onclick="switchAITab('events')" data-tab="events">
+              <i class="fas fa-calendar-alt"></i> Events
+            </button>
+            <button class="ai-tab-btn" onclick="switchAITab('transportation')" data-tab="transportation">
+              <i class="fas fa-subway"></i> Transport
+            </button>
+            <button class="ai-tab-btn" onclick="switchAITab('safety')" data-tab="safety">
+              <i class="fas fa-shield-alt"></i> Safety
+            </button>
+          </div>
+          <div id="aiTourismContent" class="ai-content">
+            <div class="ai-loading">
+              <div class="ai-spinner"></div>
+              <p>Loading real-time tourism information...</p>
+            </div>
+          </div>
+          <div class="ai-info-footer">
+            <p><i class="fas fa-clock"></i> Information updated: <span id="aiLastUpdated">Loading...</span></p>
+            <p><i class="fas fa-brain"></i> Powered by AI for real-time accuracy</p>
+          </div>
+        </div>
+
+        <!-- Local Tips Section -->
         <div class="local-tips-section">
           <h3><i class="fas fa-map-marked-alt"></i> Local Travel Tips</h3>
           <div id="localTipsContainer" class="tips-container"></div>
-        </div>        <div class="itinerary-section">
+        </div><div class="itinerary-section">
           <h3><i class="fas fa-list-alt"></i> Daily Itinerary</h3>
           <table id="itineraryTable">
             <thead>
@@ -266,9 +301,7 @@
           <strong>Travel Agent Guarantee:</strong> All recommendations are curated by professional travel experts with 15+ years of experience. Your satisfaction is our priority.
         </div>
       </div>
-    </div>
-
-    <!-- Booking Modal -->
+    </div>    <!-- Booking Modal -->
     <div id="bookingModal" class="modal hidden">
       <div class="modal-content">
         <div class="modal-header">
@@ -277,7 +310,10 @@
         </div>
         <div class="modal-body">
           <div class="booking-info">
-            <p><i class="fas fa-info-circle"></i> You will be redirected to our trusted booking partner to complete your reservation.</p>
+            <p><i class="fas fa-info-circle"></i> Choose your preferred booking partner to complete your reservation.</p>
+            <div id="bookingPartners" class="booking-partners-grid">
+              <!-- Partners will be dynamically populated -->
+            </div>
             <div class="partner-benefits">
               <div class="benefit">
                 <i class="fas fa-shield-alt"></i>
@@ -299,14 +335,10 @@
           </div>
           <div class="modal-actions">
             <button class="modal-btn secondary" onclick="closeBookingModal()">Cancel</button>
-            <button class="modal-btn primary" onclick="proceedToBooking()">
-              <i class="fas fa-external-link-alt"></i>
-              Continue to Booking
-            </button>
           </div>
         </div>
       </div>
-    </div>    <script src="api-integration.js"></script>
+    </div><script src="api-integration.js"></script>
     <script src="script.js"></script>
   </body>
 </html>

@@ -1,61 +1,82 @@
 const API_KEY =
   "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";
 
-// Comprehensive destination database with real-world data
-const destinationDatabase = {
-  // Europe
-  "paris-france": {
-    name: "Paris, France",
-    country: "France",
-    rating: 4.6,
-    reviewCount: 15428,
-    highlights: ["Eiffel Tower", "Louvre Museum", "Seine River", "Montmartre"],
-    bestTime: "April-June, September-October",
-    currency: "EUR (€)",
-    language: "French",
-    timezone: "CET (UTC+1)",
-    population: "2.2 million",
-    founded: "3rd century BC"
-  },
-  "london-uk": {
-    name: "London, United Kingdom",
-    country: "United Kingdom", 
-    rating: 4.5,
-    reviewCount: 23891,
-    highlights: ["Big Ben", "Tower Bridge", "British Museum", "Thames River"],
-    bestTime: "May-September",
-    currency: "GBP (£)",
-    language: "English",
-    timezone: "GMT (UTC+0)",
-    population: "8.9 million",
-    founded: "43 AD"
-  },
-  "rome-italy": {
-    name: "Rome, Italy",
-    country: "Italy",
-    rating: 4.7,
-    reviewCount: 19634,
-    highlights: ["Colosseum", "Vatican City", "Trevi Fountain", "Roman Forum"],
-    bestTime: "April-June, September-October",
-    currency: "EUR (€)",
-    language: "Italian",
-    timezone: "CET (UTC+1)",
-    population: "2.8 million",
-    founded: "753 BC"
-  },
-  "barcelona-spain": {
-    name: "Barcelona, Spain",
-    country: "Spain",
-    rating: 4.6,
-    reviewCount: 17892,
-    highlights: ["Sagrada Familia", "Park Güell", "Gothic Quarter", "La Rambla"],
-    bestTime: "May-June, September-October",
-    currency: "EUR (€)",
-    language: "Spanish/Catalan",
-    timezone: "CET (UTC+1)",
-    population: "1.6 million",
-    founded: "15 BC"
-  },
+// Initialize destination database - will be loaded asynchronously
+let destinationDatabase = {};
+let countriesAndCities = {};
+
+// Load destination database from JSON file
+async function loadDestinationDatabase() {
+  try {
+    const response = await fetch('destinations-database.json');
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    
+    // Update the global variables with data from the JSON file
+    destinationDatabase = data.destinations || {};
+    countriesAndCities = data.countries_and_cities || {};
+    
+    console.log('Destination database loaded successfully');
+    console.log(`Loaded ${Object.keys(destinationDatabase).length} destinations and ${Object.keys(countriesAndCities).length} countries`);
+    
+    // Initialize the UI with the loaded data
+    loadCountries();
+  } catch (error) {
+    console.error('Error loading destination database:', error);
+    // Fallback to sample data if loading fails
+    destinationDatabase = {
+      "paris-france": {
+        name: "Paris, France",
+        country: "France",
+        rating: 4.6,
+        reviewCount: 15428,
+        highlights: ["Eiffel Tower", "Louvre Museum", "Seine River", "Montmartre"],
+        bestTime: "April-June, September-October",
+        currency: "EUR (€)",
+        language: "French",
+        timezone: "CET (UTC+1)",
+        population: "2.2 million",
+        founded: "3rd century BC"
+      },
+      "london-uk": {
+        name: "London, United Kingdom",
+        country: "United Kingdom", 
+        rating: 4.5,
+        reviewCount: 23891,
+        highlights: ["Big Ben", "Tower Bridge", "British Museum", "Thames River"],
+        bestTime: "May-September",
+        currency: "GBP (£)",
+        language: "English",
+        timezone: "GMT (UTC+0)",
+        population: "8.9 million",        founded: "43 AD"
+      },
+      "rome-italy": {
+        name: "Rome, Italy",
+        country: "Italy",
+        rating: 4.7,
+        reviewCount: 19634,
+        highlights: ["Colosseum", "Vatican City", "Trevi Fountain", "Roman Forum"],
+        bestTime: "April-June, September-October",
+        currency: "EUR (€)",
+        language: "Italian",
+        timezone: "CET (UTC+1)",
+        population: "2.8 million",
+        founded: "753 BC"
+  },      "barcelona-spain": {
+        name: "Barcelona, Spain",
+        country: "Spain",
+        rating: 4.6,
+        reviewCount: 17892,
+        highlights: ["Sagrada Familia", "Park Güell", "Gothic Quarter", "La Rambla"],
+        bestTime: "May-June, September-October",
+        currency: "EUR (€)",
+        language: "Spanish/Catalan",
+        timezone: "CET (UTC+1)",
+        population: "1.6 million",
+        founded: "15 BC"
+      },
   "amsterdam-netherlands": {
     name: "Amsterdam, Netherlands",
     country: "Netherlands",
@@ -204,31 +225,32 @@ const destinationDatabase = {
     highlights: ["Sydney Opera House", "Harbour Bridge", "Bondi Beach", "The Rocks"],
     bestTime: "September-November, March-May",
     currency: "AUD (A$)",
-    language: "English",
-    timezone: "AEDT (UTC+11)",
+    language: "English",    timezone: "AEDT (UTC+11)",
     population: "5.3 million",
     founded: "1788"
   }
 };
-
-// Countries and their cities for dropdown
-const countriesAndCities = {
-  "Australia": ["Sydney", "Melbourne", "Brisbane", "Perth"],
-  "Argentina": ["Buenos Aires", "Córdoba", "Rosario", "Mendoza"],
-  "Brazil": ["Rio de Janeiro", "São Paulo", "Salvador", "Brasília"],
-  "Canada": ["Toronto", "Vancouver", "Montreal", "Calgary"],
-  "France": ["Paris", "Lyon", "Marseille", "Nice"],
-  "Germany": ["Berlin", "Munich", "Hamburg", "Cologne"],
-  "Italy": ["Rome", "Milan", "Venice", "Florence"],
-  "Japan": ["Tokyo", "Osaka", "Kyoto", "Hiroshima"],
-  "Netherlands": ["Amsterdam", "Rotterdam", "The Hague", "Utrecht"],
-  "Singapore": ["Singapore"],
-  "South Africa": ["Cape Town", "Johannesburg", "Durban", "Pretoria"],
-  "Spain": ["Barcelona", "Madrid", "Seville", "Valencia"],
-  "Thailand": ["Bangkok", "Chiang Mai", "Phuket", "Pattaya"],
-  "United Kingdom": ["London", "Edinburgh", "Manchester", "Liverpool"],
-  "United States": ["New York City", "Los Angeles", "Chicago", "Las Vegas"]
-};
+    
+    // Fallback countries and cities if loading fails
+    countriesAndCities = {
+      "Australia": ["Sydney", "Melbourne", "Brisbane", "Perth"],
+      "France": ["Paris", "Lyon", "Marseille", "Nice"],
+      "Germany": ["Berlin", "Munich", "Hamburg", "Cologne"],
+      "India": ["Mumbai", "Delhi", "Bangalore", "Jaipur", "Agra", "Varanasi", "Goa", "Trivandrum", "Kochi"],
+      "Italy": ["Rome", "Milan", "Venice", "Florence"],
+      "Japan": ["Tokyo", "Osaka", "Kyoto", "Hiroshima"],
+      "Netherlands": ["Amsterdam", "Rotterdam", "The Hague", "Utrecht"],
+      "Singapore": ["Singapore"],
+      "Spain": ["Barcelona", "Madrid", "Seville", "Valencia"],
+      "Thailand": ["Bangkok", "Chiang Mai", "Phuket", "Pattaya"],
+      "United Kingdom": ["London", "Edinburgh", "Manchester", "Liverpool"],
+      "United States": ["New York City", "Los Angeles", "Chicago", "Las Vegas"]
+    };
+    
+    // Initialize the UI with the fallback data
+    loadCountries();
+  }
+}
 
 const travelRecommendations = [
   {
@@ -451,6 +473,76 @@ function displayQuickFacts(destination) {
   `).join('');
 }
 
+function displayDosAndDonts(destination) {
+  // Create a key from city and country
+  const cityCountry = destination.split(', ');
+  const city = cityCountry[0]?.toLowerCase().replace(/[^a-z]/g, '') || '';
+  const country = cityCountry[1]?.toLowerCase().replace(/[^a-z]/g, '') || '';
+  const destinationKey = `${city}-${country}`;
+  
+  const destData = destinationDatabase[destinationKey] || {
+    dos: [
+      "Research local customs and traditions",
+      "Learn basic local phrases",
+      "Try authentic local cuisine",
+      "Respect local dress codes",
+      "Use official transportation",
+      "Keep important documents safe"
+    ],
+    donts: [
+      "Don't ignore local laws and regulations",
+      "Don't be disrespectful to local culture",
+      "Don't drink tap water unless it's safe",
+      "Don't leave valuables unattended",
+      "Don't be too trusting of strangers",
+      "Don't ignore travel advisories"
+    ]
+  };
+
+  // Check if container exists, if not create it
+  let dosAndDontsContainer = document.getElementById('dosAndDontsContainer');
+  if (!dosAndDontsContainer) {
+    // Create the container and add it to the page
+    const resultsDiv = document.getElementById('results');
+    if (resultsDiv) {
+      const dosAndDontsSection = document.createElement('div');
+      dosAndDontsSection.className = 'dos-and-donts-section';
+      dosAndDontsSection.innerHTML = `
+        <h3><i class="fas fa-exclamation-triangle"></i> Do's and Don'ts</h3>
+        <div id="dosAndDontsContainer" class="dos-and-donts-container"></div>
+      `;
+      
+      // Insert it after the quick facts section
+      const quickFactsSection = resultsDiv.querySelector('.quick-facts');
+      if (quickFactsSection) {
+        quickFactsSection.insertAdjacentElement('afterend', dosAndDontsSection);
+      } else {
+        resultsDiv.appendChild(dosAndDontsSection);
+      }
+      dosAndDontsContainer = document.getElementById('dosAndDontsContainer');
+    }
+  }
+
+  if (dosAndDontsContainer) {
+    dosAndDontsContainer.innerHTML = `
+      <div class="dos-and-donts-grid">
+        <div class="dos-section">
+          <h4><i class="fas fa-check-circle"></i> Do's</h4>
+          <ul class="dos-list">
+            ${destData.dos.map(doItem => `<li><i class="fas fa-check"></i> ${doItem}</li>`).join('')}
+          </ul>
+        </div>
+        <div class="donts-section">
+          <h4><i class="fas fa-times-circle"></i> Don'ts</h4>
+          <ul class="donts-list">
+            ${destData.donts.map(dontItem => `<li><i class="fas fa-times"></i> ${dontItem}</li>`).join('')}
+          </ul>
+        </div>
+      </div>
+    `;
+  }
+}
+
 function displayRecommendations() {
   const container = document.getElementById('recommendationsContainer');
   container.innerHTML = travelRecommendations.map(rec => `
@@ -669,6 +761,16 @@ function displayDestinationGallery(destination) {
   });
 }
 
+function formatRating(rating) {
+  if (!rating) return 0;
+  return Math.round(rating * 10) / 10;
+}
+
+function truncateText(text, maxLength = 150) {
+  if (!text) return "";
+  return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
+}
+
 // Form submission
 document.getElementById("travelForm").addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -772,6 +874,7 @@ document.getElementById("travelForm").addEventListener("submit", async (e) => {
     document.getElementById("loading").classList.add("hidden");    // Display all TripAdvisor-like features
     displayDestinationOverview(destination);
     displayQuickFacts(destination);
+    displayDosAndDonts(destination);
     displayRecommendations();
     displayLocalTips();
     displaySimilarDestinations();
@@ -872,6 +975,7 @@ document.getElementById("travelForm").addEventListener("submit", async (e) => {
         // Display TripAdvisor-like features with fallback
       displayDestinationOverview(destination);
       displayQuickFacts(destination);
+      displayDosAndDonts(destination);
       displayRecommendations();
       displayLocalTips();
       displaySimilarDestinations();
@@ -931,13 +1035,367 @@ document.getElementById("travelForm").addEventListener("submit", async (e) => {
   }
 });
 
+// AI Tourism Information Management
+let currentAITab = 'general';
+let aiDataCache = {};
+
+function switchAITab(tabType) {
+  // Update tab buttons
+  document.querySelectorAll('.ai-tab-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  document.querySelector(`[data-tab="${tabType}"]`).classList.add('active');
+  
+  // Update current tab
+  currentAITab = tabType;
+  
+  // Load content for the selected tab
+  loadAITourismInfo(tabType);
+}
+
+async function loadAITourismInfo(infoType = 'general') {
+  const contentContainer = document.getElementById('aiTourismContent');
+  const lastUpdatedSpan = document.getElementById('aiLastUpdated');
+  
+  // Show loading state
+  contentContainer.innerHTML = `
+    <div class="ai-loading">
+      <div class="ai-spinner"></div>
+      <p>Fetching real-time ${infoType} information...</p>
+    </div>
+  `;
+  
+  try {
+    // Get current destination
+    const destination = getCurrentDestination();
+    if (!destination) {
+      throw new Error('No destination selected');
+    }
+    
+    const cityCountry = destination.split(', ');
+    const city = cityCountry[0] || '';
+    const country = cityCountry[1] || '';
+    
+    // Check cache first
+    const cacheKey = `${city}-${country}-${infoType}`;
+    if (aiDataCache[cacheKey] && isDataFresh(aiDataCache[cacheKey].timestamp)) {
+      displayAIContent(aiDataCache[cacheKey].data, infoType);
+      lastUpdatedSpan.textContent = formatTimestamp(aiDataCache[cacheKey].timestamp);
+      return;
+    }
+    
+    // Fetch from Deepseek API
+    const aiData = await DeepseekAPI.fetchRealTimeTourismInfo(city, country, infoType);
+    
+    // Cache the result
+    aiDataCache[cacheKey] = {
+      data: aiData,
+      timestamp: new Date()
+    };
+    
+    // Display the content
+    displayAIContent(aiData, infoType);
+    lastUpdatedSpan.textContent = formatTimestamp(new Date());
+    
+  } catch (error) {
+    console.error('Error loading AI tourism info:', error);
+    showAIError(contentContainer, error.message);
+  }
+}
+
+function displayAIContent(data, infoType) {
+  const container = document.getElementById('aiTourismContent');
+  
+  switch (infoType) {
+    case 'general':
+      displayGeneralInfo(container, data);
+      break;
+    case 'attractions':
+      displayAttractionsInfo(container, data);
+      break;
+    case 'restaurants':
+      displayRestaurantsInfo(container, data);
+      break;
+    case 'events':
+      displayEventsInfo(container, data);
+      break;
+    case 'transportation':
+      displayTransportationInfo(container, data);
+      break;
+    case 'safety':
+      displaySafetyInfo(container, data);
+      break;
+    default:
+      displayGeneralInfo(container, data);
+  }
+}
+
+function displayGeneralInfo(container, data) {
+  container.innerHTML = `
+    <div class="ai-section-content">
+      <h4><i class="fas fa-globe"></i> Current Tourism Overview</h4>
+      <div class="ai-info-grid">
+        <div class="ai-info-card">
+          <h5><i class="fas fa-thermometer-half"></i> Weather & Climate</h5>
+          <p>${extractWeatherInfo(data.content)}</p>
+        </div>
+        <div class="ai-info-card">
+          <h5><i class="fas fa-star"></i> Trending Now</h5>
+          <p>${extractTrendingInfo(data.content)}</p>
+        </div>
+        <div class="ai-info-card">
+          <h5><i class="fas fa-info-circle"></i> Current Status</h5>
+          <p>${extractStatusInfo(data.content)}</p>
+        </div>
+        <div class="ai-info-card">
+          <h5><i class="fas fa-lightbulb"></i> Local Tips</h5>
+          <p>${extractTipsInfo(data.content)}</p>
+        </div>
+      </div>
+      <div class="ai-full-content">
+        <h4><i class="fas fa-book"></i> Detailed Information</h4>
+        <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin-top: 10px;">
+          ${formatAIContent(data.content)}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function displayAttractionsInfo(container, data) {
+  const attractions = data.attractions || extractAttractionsList(data.content);
+  
+  container.innerHTML = `
+    <div class="ai-section-content">
+      <h4><i class="fas fa-map-marker-alt"></i> Top Attractions (Updated ${new Date().toLocaleDateString()})</h4>
+      ${attractions.length > 0 ? attractions.map((attraction, index) => `
+        <div class="ai-attraction-item">
+          <h5>${index + 1}. ${attraction.name}</h5>
+          <p>${attraction.description || attraction.rawLine}</p>
+        </div>
+      `).join('') : `
+        <div class="ai-info-card">
+          <p>${formatAIContent(data.content)}</p>
+        </div>
+      `}
+    </div>
+  `;
+}
+
+function displayRestaurantsInfo(container, data) {
+  const restaurants = data.restaurants || extractRestaurantsList(data.content);
+  
+  container.innerHTML = `
+    <div class="ai-section-content">
+      <h4><i class="fas fa-utensils"></i> Dining Recommendations</h4>
+      ${restaurants.length > 0 ? restaurants.map((restaurant, index) => `
+        <div class="ai-restaurant-item">
+          <h5>${index + 1}. ${restaurant.name}</h5>
+          <p>${restaurant.description || restaurant.rawLine}</p>
+        </div>
+      `).join('') : `
+        <div class="ai-info-card">
+          <p>${formatAIContent(data.content)}</p>
+        </div>
+      `}
+    </div>
+  `;
+}
+
+function displayEventsInfo(container, data) {
+  const events = data.events || extractEventsList(data.content);
+  
+  container.innerHTML = `
+    <div class="ai-section-content">
+      <h4><i class="fas fa-calendar-alt"></i> Current & Upcoming Events</h4>
+      ${events.length > 0 ? events.map((event, index) => `
+        <div class="ai-event-item">
+          <h5>${event.name}</h5>
+          <p>${event.description || event.rawLine}</p>
+        </div>
+      `).join('') : `
+        <div class="ai-info-card">
+          <p>${formatAIContent(data.content)}</p>
+        </div>
+      `}
+    </div>
+  `;
+}
+
+function displayTransportationInfo(container, data) {
+  container.innerHTML = `
+    <div class="ai-section-content">
+      <h4><i class="fas fa-subway"></i> Transportation Information</h4>
+      <div class="ai-info-card">
+        ${formatAIContent(data.content)}
+      </div>
+    </div>
+  `;
+}
+
+function displaySafetyInfo(container, data) {
+  container.innerHTML = `
+    <div class="ai-section-content">
+      <h4><i class="fas fa-shield-alt"></i> Safety & Health Information</h4>
+      <div class="ai-info-card">
+        ${formatAIContent(data.content)}
+      </div>
+    </div>
+  `;
+}
+
+function showAIError(container, message) {
+  container.innerHTML = `
+    <div class="ai-error">
+      <i class="fas fa-exclamation-triangle"></i>
+      <p>Unable to load real-time information: ${message}</p>
+      <button class="ai-retry-btn" onclick="loadAITourismInfo('${currentAITab}')">
+        <i class="fas fa-redo"></i> Retry
+      </button>
+      <p style="margin-top: 10px; font-size: 0.85rem;">
+        Using cached data or fallback information where available.
+      </p>
+    </div>
+  `;
+}
+
+// Utility functions for AI data processing
+function getCurrentDestination() {
+  return document.getElementById('destinationName')?.textContent || null;
+}
+
+function isDataFresh(timestamp, maxAgeMinutes = 30) {
+  const now = new Date();
+  const age = (now - timestamp) / (1000 * 60); // Age in minutes
+  return age < maxAgeMinutes;
+}
+
+function formatTimestamp(timestamp) {
+  return new Date(timestamp).toLocaleString();
+}
+
+function formatAIContent(content) {
+  if (!content) return 'Information not available';
+  
+  // Convert markdown-like formatting to HTML
+  return content
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+    .replace(/\n\n/g, '</p><p>')
+    .replace(/\n/g, '<br>')
+    .replace(/^/, '<p>')
+    .replace(/$/, '</p>');
+}
+
+function extractWeatherInfo(content) {
+  const weatherMatch = content.match(/weather|temperature|climate|season/i);
+  if (weatherMatch) {
+    const sentences = content.split('.').filter(s => /weather|temperature|climate|season/i.test(s));
+    return sentences[0]?.trim() + '.' || 'Weather information available in detailed section.';
+  }
+  return 'Current weather conditions vary. Check detailed information below.';
+}
+
+function extractTrendingInfo(content) {
+  const trendingMatch = content.match(/trending|popular|hotspot|new|recent/i);
+  if (trendingMatch) {
+    const sentences = content.split('.').filter(s => /trending|popular|hotspot|new|recent/i.test(s));
+    return sentences[0]?.trim() + '.' || 'Popular attractions and experiences available.';
+  }
+  return 'Discover trending attractions and experiences in the detailed sections.';
+}
+
+function extractStatusInfo(content) {
+  const statusMatch = content.match(/open|closed|operating|hours|status|available/i);
+  if (statusMatch) {
+    const sentences = content.split('.').filter(s => /open|closed|operating|hours|status|available/i.test(s));
+    return sentences[0]?.trim() + '.' || 'Operating status information available.';
+  }
+  return 'Most attractions and services are operating normally.';
+}
+
+function extractTipsInfo(content) {
+  const tipsMatch = content.match(/tip|advice|recommend|suggest|should|best/i);
+  if (tipsMatch) {
+    const sentences = content.split('.').filter(s => /tip|advice|recommend|suggest|should|best/i.test(s));
+    return sentences[0]?.trim() + '.' || 'Travel tips and recommendations available.';
+  }
+  return 'Local insights and travel tips available in detailed information.';
+}
+
+function extractAttractionsList(content) {
+  const lines = content.split('\n');
+  const attractions = [];
+  
+  lines.forEach(line => {
+    const match = line.match(/^(?:\d+\.|\*|\-)\s*(.+?)(?:\s*-\s*(.+))?$/);
+    if (match && /attraction|museum|temple|palace|park|tower|bridge/i.test(line)) {
+      attractions.push({
+        name: match[1].trim(),
+        description: match[2] ? match[2].trim() : '',
+        rawLine: line
+      });
+    }
+  });
+  
+  return attractions.slice(0, 10);
+}
+
+function extractRestaurantsList(content) {
+  const lines = content.split('\n');
+  const restaurants = [];
+  
+  lines.forEach(line => {
+    const match = line.match(/^(?:\d+\.|\*|\-)\s*(.+?)(?:\s*-\s*(.+))?$/);
+    if (match && /restaurant|cafe|food|cuisine|dining|eat/i.test(line)) {
+      restaurants.push({
+        name: match[1].trim(),
+        description: match[2] ? match[2].trim() : '',
+        rawLine: line
+      });
+    }
+  });
+  
+  return restaurants.slice(0, 8);
+}
+
+function extractEventsList(content) {
+  const lines = content.split('\n');
+  const events = [];
+  
+  lines.forEach(line => {
+    const match = line.match(/^(?:\d+\.|\*|\-)\s*(.+?)(?:\s*-\s*(.+))?$/);
+    if (match && /event|festival|exhibition|concert|show|celebration/i.test(line)) {
+      events.push({
+        name: match[1].trim(),
+        description: match[2] ? match[2].trim() : '',
+        rawLine: line
+      });
+    }
+  });
+  
+  return events.slice(0, 6);
+}
+
 // Booking Modal Functions
 let currentBookingType = '';
+let currentDestination = '';
+let currentStartDate = '';
+let currentEndDate = '';
 
 function openBookingModal(type) {
   currentBookingType = type;
+  
+  // Get current trip details from the form
+  const country = document.getElementById("country").value;
+  const city = document.getElementById("destination").value;
+  currentDestination = `${city}, ${country}`;
+  currentStartDate = document.getElementById("startDate").value;
+  currentEndDate = document.getElementById("endDate").value;
+  
   const modal = document.getElementById('bookingModal');
   const modalTitle = document.getElementById('modalTitle');
+  const partnersContainer = document.getElementById('bookingPartners');
   
   const titles = {
     flights: 'Book Your Flight',
@@ -948,6 +1406,113 @@ function openBookingModal(type) {
   };
   
   modalTitle.textContent = titles[type] || 'Book Your Travel';
+  
+  // Define booking partners for each service
+  const bookingPartners = {
+    flights: [
+      {
+        name: 'Expedia',
+        logo: 'fas fa-plane',
+        description: 'Compare flights from 500+ airlines',
+        rating: '4.5/5',
+        benefits: ['Price Match Guarantee', 'Rewards Program', '24/7 Support']
+      },
+      {
+        name: 'Kayak',
+        logo: 'fas fa-search',
+        description: 'Search hundreds of travel sites',
+        rating: '4.4/5',
+        benefits: ['Price Forecasting', 'Trip Planning', 'Mobile Alerts']
+      }
+    ],
+    hotels: [
+      {
+        name: 'Booking.com',
+        logo: 'fas fa-bed',
+        description: 'Over 28 million listings worldwide',
+        rating: '4.6/5',
+        benefits: ['Free Cancellation', 'No Booking Fees', 'Best Price Guarantee']
+      },
+      {
+        name: 'Hotels.com',
+        logo: 'fas fa-building',
+        description: 'Collect 10 nights, get 1 free',
+        rating: '4.3/5',
+        benefits: ['Rewards Program', 'Member Discounts', 'Express Booking']
+      }
+    ],
+    cars: [
+      {
+        name: 'Hertz',
+        logo: 'fas fa-car',
+        description: 'Global leader in car rental',
+        rating: '4.2/5',
+        benefits: ['Premium Fleet', 'Gold Plus Rewards', 'Worldwide Coverage']
+      },
+      {
+        name: 'Enterprise',
+        logo: 'fas fa-road',
+        description: 'Pick you up at your location',
+        rating: '4.4/5',
+        benefits: ['Pick-up Service', 'Wide Selection', 'Loyalty Program']
+      }
+    ],
+    activities: [
+      {
+        name: 'Viator',
+        logo: 'fas fa-ticket-alt',
+        description: 'Book tours and attractions',
+        rating: '4.3/5',
+        benefits: ['Skip-the-Line', 'Local Experts', 'Instant Confirmation']
+      },
+      {
+        name: 'GetYourGuide',
+        logo: 'fas fa-map-marked-alt',
+        description: 'Discover and book experiences',
+        rating: '4.5/5',
+        benefits: ['Free Cancellation', 'Mobile Tickets', '24/7 Support']
+      }
+    ],
+    insurance: [
+      {
+        name: 'World Nomads',
+        logo: 'fas fa-shield-alt',
+        description: 'Travel insurance for adventurers',
+        rating: '4.4/5',
+        benefits: ['Adventure Coverage', 'Claim Online', '24/7 Emergency']
+      },
+      {
+        name: 'Allianz Travel',
+        logo: 'fas fa-umbrella',
+        description: 'Comprehensive travel protection',
+        rating: '4.2/5',
+        benefits: ['Trip Cancellation', 'Medical Coverage', 'Baggage Protection']
+      }
+    ]
+  };
+  
+  const partners = bookingPartners[type] || [];
+  
+  partnersContainer.innerHTML = partners.map(partner => `
+    <div class="partner-option">
+      <div class="partner-header">
+        <i class="${partner.logo}"></i>
+        <div class="partner-info">
+          <h4>${partner.name}</h4>
+          <div class="partner-rating">★ ${partner.rating}</div>
+        </div>
+      </div>
+      <p class="partner-description">${partner.description}</p>
+      <ul class="partner-benefits">
+        ${partner.benefits.map(benefit => `<li><i class="fas fa-check"></i> ${benefit}</li>`).join('')}
+      </ul>
+      <button class="partner-btn" onclick="proceedToBooking('${partner.name.toLowerCase().replace(/[^a-z]/g, '')}')">
+        <i class="fas fa-external-link-alt"></i>
+        Book with ${partner.name}
+      </button>
+    </div>
+  `).join('');
+  
   modal.classList.remove('hidden');
   document.body.style.overflow = 'hidden';
 }
@@ -957,22 +1522,80 @@ function closeBookingModal() {
   modal.classList.add('hidden');
   document.body.style.overflow = 'auto';
   currentBookingType = '';
+  currentDestination = '';
 }
 
-function proceedToBooking() {
-  // In a real application, this would redirect to actual booking partners
+function proceedToBooking(partner) {
+  // Get destination details for URL encoding
+  const [city, country] = currentDestination.split(', ');
+  const encodedCity = encodeURIComponent(city);
+  const encodedCountry = encodeURIComponent(country);
+  const encodedDestination = encodeURIComponent(currentDestination);
+  
+  // Format dates for URL parameters
+  const checkIn = currentStartDate;
+  const checkOut = currentEndDate;
+  
+  // Define actual booking URLs with parameters
   const bookingUrls = {
-    flights: 'https://www.example-flights.com',
-    hotels: 'https://www.example-hotels.com',
-    cars: 'https://www.example-cars.com',
-    activities: 'https://www.example-activities.com',
-    insurance: 'https://www.example-insurance.com'
+    // Flight booking URLs
+    flights: {
+      expedia: `https://www.expedia.com/Flights-Search?trip=oneway&leg1=from:${encodedCity},to:${encodedDestination}&passengers=adults:1&options=cabinclass:economy&fromDate=${checkIn}&toDate=${checkOut}`,
+      kayak: `https://www.kayak.com/flights/${encodedCity}-${encodedDestination}/${checkIn}/${checkOut}?sort=bestflight_a`
+    },
+    
+    // Hotel booking URLs
+    hotels: {
+      bookingcom: `https://www.booking.com/searchresults.html?ss=${encodedDestination}&checkin=${checkIn}&checkout=${checkOut}&group_adults=1&no_rooms=1&group_children=0`,
+      hotelscom: `https://www.hotels.com/search.do?destination=${encodedDestination}&startDate=${checkIn}&endDate=${checkOut}&rooms=1&adults=1`
+    },
+    
+    // Car rental URLs
+    cars: {
+      hertz: `https://www.hertz.com/rentacar/reservation/?targetPage=searchResultsPage&from=${encodedCity}&fromDate=${checkIn}&toDate=${checkOut}`,
+      enterprise: `https://www.enterprise.com/en/car-rental/locations/${encodedCountry}/${encodedCity}.html?from=${checkIn}&to=${checkOut}`
+    },
+    
+    // Activities booking URLs
+    activities: {
+      viator: `https://www.viator.com/${encodedCountry}/${encodedCity}-tours/d${Math.floor(Math.random() * 1000)}`,
+      getyourguide: `https://www.getyourguide.com/s/?q=${encodedDestination}&date_from=${checkIn}&date_to=${checkOut}`
+    },
+    
+    // Insurance URLs
+    insurance: {
+      worldnomads: `https://www.worldnomads.com/travel-insurance/get-quote?trip_type=single&departure_date=${checkIn}&return_date=${checkOut}&destination=${encodedCountry}`,
+      allianztravel: `https://www.allianztravelinsurance.com/get-quote?departure=${checkIn}&return=${checkOut}&destination=${encodedCountry}`
+    }
   };
   
-  // For demo purposes, show an alert
-  alert(`This would redirect you to book ${currentBookingType}. In a real application, this would connect to actual booking partners like Expedia, Booking.com, or Viator.`);
+  // Get the appropriate URL
+  let bookingUrl = '';
   
+  if (bookingUrls[currentBookingType] && bookingUrls[currentBookingType][partner]) {
+    bookingUrl = bookingUrls[currentBookingType][partner];
+  } else {
+    // Fallback URLs if specific partner not found
+    const fallbackUrls = {
+      flights: `https://www.google.com/travel/flights?q=flights%20to%20${encodedDestination}%20from%20${checkIn}%20to%20${checkOut}`,
+      hotels: `https://www.google.com/travel/hotels/${encodedDestination}?g2lb=2502548%2C2503771%2C2503781%2C4258168&hl=en&gl=us&cs=1&ssta=1&ts=CAESCAoCCAMKAggDGhwSGhIUCgcI5Q8QCxgMEgcI5Q8QCxgNGAEyAhAAKgcKBToDVVNE&checkin=${checkIn}&checkout=${checkOut}`,
+      cars: `https://www.google.com/travel/search?q=car%20rental%20${encodedDestination}&pickup_date=${checkIn}&dropoff_date=${checkOut}`,
+      activities: `https://www.google.com/search?q=things%20to%20do%20in%20${encodedDestination}`,
+      insurance: `https://www.google.com/search?q=travel%20insurance%20for%20${encodedDestination}`
+    };
+    bookingUrl = fallbackUrls[currentBookingType] || 'https://www.google.com/travel';
+  }
+  
+  // Open the booking URL in a new tab
+  window.open(bookingUrl, '_blank');
+  
+  // Close the modal
   closeBookingModal();
+  
+  // Show confirmation message
+  setTimeout(() => {
+    alert(`Redirected to ${partner || 'booking partner'} for ${currentBookingType} in ${currentDestination}. The booking page should open in a new tab with your travel dates (${checkIn} to ${checkOut}) pre-filled.`);
+  }, 500);
 }
 
 // Close modal when clicking outside
@@ -1020,8 +1643,8 @@ window.UIHelpers = {
 
 // Set minimum date to today for date inputs
 document.addEventListener('DOMContentLoaded', function() {
-  // Load countries when page loads
-  loadCountries();
+  // Load destination database first, then load countries
+  loadDestinationDatabase();
   
   const today = new Date().toISOString().split('T')[0];
   document.getElementById('startDate').min = today;
@@ -1031,4 +1654,10 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('startDate').addEventListener('change', function() {
     document.getElementById('endDate').min = this.value;
   });
+  
+  // Debug: Check if countries are loaded correctly after a short delay
+  setTimeout(() => {
+    console.log('Countries and cities data:', countriesAndCities);
+    console.log('Destination database:', Object.keys(destinationDatabase));
+  }, 1000);
 });
